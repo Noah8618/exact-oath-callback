@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Exact Online — autorisatiecode</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 60px auto; padding: 0 20px; color: #1a1a1a; }
+  h1 { font-size: 1.3rem; }
+  #code-box { font-family: ui-monospace, monospace; font-size: 0.95rem; word-break: break-all; background: #f4f4f4; border: 1px solid #ddd; border-radius: 6px; padding: 14px; margin: 16px 0; }
+  button { padding: 8px 16px; font-size: 0.95rem; cursor: pointer; }
+  .empty { color: #a00; }
+  .hint { color: #555; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+  <h1>Exact Online autorisatie</h1>
+  <p>Deze pagina vangt alleen de autorisatiecode op na het inloggen bij Exact Online. Er wordt niets opgeslagen of verzonden.</p>
+  <div id="code-box">Code wordt gelezen...</div>
+  <button id="copy-btn" style="display:none">Kopieer code</button>
+  <p class="hint">Kopieer de code hierboven en geef hem door om in te wisselen voor een access token. Je kunt dit venster daarna sluiten.</p>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  const error = params.get('error');
+  const box = document.getElementById('code-box');
+  const btn = document.getElementById('copy-btn');
+
+  if (code) {
+    box.textContent = code;
+    btn.style.display = 'inline-block';
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Gekopieerd!';
+      });
+    });
+  } else if (error) {
+    box.textContent = 'Fout ontvangen van Exact: ' + error;
+    box.classList.add('empty');
+  } else {
+    box.textContent = 'Geen code gevonden in de URL.';
+    box.classList.add('empty');
+  }
+</script>
+</body>
+</html>
